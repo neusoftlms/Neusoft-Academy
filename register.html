@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neusoft Academy - Register</title>
-    <link rel="stylesheet" href="css/auth.css">
+    <title>Register - Neusoft Academy</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
 </head>
 <body>
     <header>
@@ -18,44 +18,79 @@
                     <li><a href="index.html">Home</a></li>
                     <li><a href="courses.html">Courses</a></li>
                     <li><a href="login.html">Login</a></li>
-                    <li><a href="register.html" class="active">Register</a></li>
+                    <li><a href="register.html" class="btn active">Sign Up</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <main class="auth-container">
+    <section class="auth-container">
         <div class="auth-form">
             <h2>Create Your Account</h2>
             <form id="registerForm">
                 <div class="form-group">
-                    <label for="regName">Full Name</label>
-                    <input type="text" id="regName" name="name" required>
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" required>
                 </div>
                 <div class="form-group">
-                    <label for="regEmail">Email</label>
-                    <input type="email" id="regEmail" name="email" required>
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
                 </div>
                 <div class="form-group">
-                    <label for="regPassword">Password</label>
-                    <input type="password" id="regPassword" name="password" required minlength="6">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
                 </div>
                 <div class="form-group">
-                    <label for="regRole">I am a:</label>
-                    <select id="regRole" name="role" required>
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="userType">I am a:</label>
+                    <select id="userType" name="userType">
                         <option value="student">Student</option>
                         <option value="instructor">Instructor</option>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label for="terms" class="checkbox-label">
+                        <input type="checkbox" id="terms" name="terms" required>
+                        <span>I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></span>
+                    </label>
+                </div>
                 <button type="submit" class="btn btn-primary">Register</button>
             </form>
-            <p class="auth-link">Already have an account? <a href="login.html">Login here</a></p>
+            <div class="auth-links">
+                <a href="login.html">Already have an account? Login</a>
+            </div>
+            <div id="registerMessage" class="message"></div>
         </div>
-    </main>
+    </section>
 
     <footer>
         <div class="container">
-            <p>&copy; 2023 Neusoft Academy. All rights reserved.</p>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Neusoft Academy</h3>
+                    <p>Empowering learners to achieve their career goals through high-quality online education.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="courses.html">Courses</a></li>
+                        <li><a href="login.html">Login</a></li>
+                        <li><a href="register.html">Register</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <p>Email: info@neusoftacademy.com</p>
+                    <p>Phone: (123) 456-7890</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Neusoft Academy. All rights reserved.</p>
+            </div>
         </div>
     </footer>
 
