@@ -130,3 +130,13 @@ function handleRegistration(e) {
 }
 
 // ... (keep the remaining functions the same)
+function handleLogout(e) {
+    e.preventDefault();
+    
+    // Clear user data from storage
+    localStorage.removeItem('currentUser');
+    sessionStorage.removeItem('currentUser');
+    
+    // Redirect to homepage
+    window.location.href = 'index.html';
+}
