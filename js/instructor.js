@@ -1,3 +1,4 @@
+// instructor.js - Updated to use Database methods
 document.addEventListener('DOMContentLoaded', function() {
     // Check if user is instructor
     const currentUser = getCurrentUser();
@@ -13,12 +14,12 @@ document.addEventListener('DOMContentLoaded', function() {
     setupTabs();
     
     // Load data for each tab
-    loadMyCoursesTab();
-    loadStudentsTab();
-    loadAnalyticsTab();
+    loadMyCoursesTab(currentUser);
+    loadStudentsTab(currentUser);
+    loadAnalyticsTab(currentUser);
     
     // Modal functionality
-    setupModals();
+    setupModals(currentUser);
 });
 
 function setupTabs() {
@@ -38,39 +39,20 @@ function setupTabs() {
     });
 }
 
-function loadMyCoursesTab() {
+function loadMyCoursesTab(instructor) {
     const coursesList = document.getElementById('instructorCourses');
     coursesList.innerHTML = '';
     
-    // Sample course data (in a real app, this would come from a server)
-    const courses = [
-        {
-            id: 1,
-            title: "Introduction to Web Development",
-            image: "https://via.placeholder.com/800x450",
-            students: 1250,
-            progress: 75,
-            lastUpdated: "2023-05-20"
-        },
-        {
-            id: 2,
-            title: "Advanced JavaScript Techniques",
-            image: "https://via.placeholder.com/800x450",
-            students: 850,
-            progress: 60,
-            lastUpdated: "2023-04-15"
-        },
-        {
-            id: 3,
-            title: "React Fundamentals",
-            image: "https://via.placeholder.com/800x450",
-            students: 1100,
-            progress: 90,
-            lastUpdated: "2023-06-10"
-        }
-    ];
+    const courses = Database.getCourses().filter(c => c.instructorId === instructor.id);
+    const enrollments = Database.getEnrollments();
     
     courses.forEach(course => {
+        // Calculate average progress for this course
+        const courseEnrollments = enrollments.filter(e => e.courseId === course.id);
+        const avgProgress = courseEnrollments.length > 0 
+            ? Math.round(courseEnrollments.reduce((sum, e) => sum + e.progress, 0) / courseEnrollments.length)
+            : 0;
+        
         const courseItem = document.createElement('div');
         courseItem.className = 'course-item';
         
@@ -81,90 +63,110 @@ function loadMyCoursesTab() {
             <div class="course-info">
                 <h3>${course.title}</h3>
                 <div class="course-meta">
-                    <span>${course.students} students</span>
-                    <span>Last updated: ${course.lastUpdated}</span>
+                    <span>${course.students.length} students</span>
+                    <span>Avg. progress: ${avgProgress}%</span>
                 </div>
                 <div class="course-progress">
-                    <div class="course-progress-fill" style="width: ${course.progress}%"></div>
+                    <div class="course-progress-fill" style="width: ${avgProgress}%"></div>
                 </div>
             </div>
-            <a href="#" class="btn btn-secondary">Manage</a>
+            <button class="btn btn-secondary manage-course-btn" data-id="${course.id}">Manage</button>
         `;
         
         coursesList.appendChild(courseItem);
     });
+    
+    // Add event listeners to manage buttons
+    document.querySelectorAll('.manage-course-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const courseId = parseInt(e.target.getAttribute('data-id'));
+            // In a real app, this would navigate to a course management page
+            alert(`Manage course ID: ${courseId}\nThis would open a course management page in a real implementation.`);
+        });
+    });
 }
 
-function loadStudentsTab() {
+function loadStudentsTab(instructor) {
     const studentsTable = document.getElementById('studentsTable').getElementsByTagName('tbody')[0];
     studentsTable.innerHTML = '';
     
-    // Sample student data (in a real app, this would come from a server)
-    const students = [
-        {
-            id: 1,
-            name: "Student One",
-            course: "Introduction to Web Development",
-            progress: 75,
-            lastActivity: "2023-06-15"
-        },
-        {
-            id: 2,
-            name: "Student Two",
-            course: "Introduction to Web Development",
-            progress: 45,
-            lastActivity: "2023-06-10"
-        },
-        {
-            id: 3,
-            name: "Student Three",
-            course: "Advanced JavaScript Techniques",
-            progress: 60,
-            lastActivity: "2023-06-12"
-        },
-        {
-            id: 4,
-            name: "Student Four",
-            course: "React Fundamentals",
-            progress: 90,
-            lastActivity: "2023-06-14"
-        },
-        {
-            id: 5,
-            name: "Student Five",
-            course: "React Fundamentals",
-            progress: 30,
-            lastActivity: "2023-06-08"
-        }
-    ];
+    const courses = Database.getCourses().filter(c => c.instructorId === instructor.id);
+    const enrollments = Database.getEnrollments();
+    const users = Database.getUsers();
     
-    students.forEach(student => {
+    // Get all students enrolled in instructor's courses
+    const courseIds = courses.map(c => c.id);
+    const instructorEnrollments = enrollments.filter(e => courseIds.includes(e.courseId));
+    
+    instructorEnrollments.forEach(enrollment => {
+        const student = users.find(u => u.id === enrollment.userId);
+        const course = courses.find(c => c.id === enrollment.courseId);
+        
+        if (!student || !course) return;
+        
         const row = studentsTable.insertRow();
         
         row.innerHTML = `
             <td>${student.name}</td>
-            <td>${student.course}</td>
+            <td>${course.title}</td>
             <td>
                 <div class="progress-bar" style="margin: 5px 0;">
-                    <div class="progress-fill" style="width: ${student.progress}%"></div>
+                    <div class="progress-fill" style="width: ${enrollment.progress}%"></div>
                 </div>
-                <div style="text-align: center;">${student.progress}%</div>
+                <div style="text-align: center;">${enrollment.progress}%</div>
             </td>
-            <td>${student.lastActivity}</td>
+            <td>${new Date(enrollment.enrolledAt).toLocaleDateString()}</td>
             <td>
-                <button class="action-btn view-btn">View</button>
-                <button class="action-btn edit-btn">Message</button>
+                <button class="action-btn view-btn" data-id="${student.id}">View</button>
+                <button class="action-btn edit-btn" data-id="${student.id}">Message</button>
             </td>
         `;
     });
+    
+    // Add event listeners to action buttons
+    document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const studentId = parseInt(e.target.getAttribute('data-id'));
+            viewStudentProgress(studentId);
+        });
+    });
+    
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const studentId = parseInt(e.target.getAttribute('data-id'));
+            messageStudent(studentId);
+        });
+    });
 }
 
-function loadAnalyticsTab() {
+function viewStudentProgress(studentId) {
+    const student = Database.getUsers().find(u => u.id === studentId);
+    if (!student) return;
+    
+    alert(`View progress for student: ${student.name}\nThis would show detailed progress in a real implementation.`);
+}
+
+function messageStudent(studentId) {
+    const student = Database.getUsers().find(u => u.id === studentId);
+    if (!student) return;
+    
+    alert(`Send message to student: ${student.name}\nThis would open a messaging interface in a real implementation.`);
+}
+
+function loadAnalyticsTab(instructor) {
+    const courses = Database.getCourses().filter(c => c.instructorId === instructor.id);
+    const enrollments = Database.getEnrollments();
+    
     // Update summary cards
-    document.getElementById('totalStudents').textContent = "1,250";
-    document.getElementById('totalCourses').textContent = "3";
-    document.getElementById('averageRating').textContent = "4.7";
-    document.getElementById('completionRate').textContent = "78%";
+    const totalStudents = new Set(enrollments
+        .filter(e => courses.some(c => c.id === e.courseId))
+        .map(e => e.userId)
+    ).size;
+    
+    document.getElementById('totalStudents').textContent = totalStudents;
+    document.getElementById('totalCourses').textContent = courses.length;
+    document.getElementById('averageRating').textContent = "4.7"; // Would come from reviews in a real app
+    document.getElementById('completionRate').textContent = "78%"; // Would be calculated in a real app
     
     // Create enrollment chart
     const ctx = document.getElementById('enrollmentChart').getContext('2d');
@@ -202,7 +204,7 @@ function loadAnalyticsTab() {
     });
 }
 
-function setupModals() {
+function setupModals(instructor) {
     // Add Content Modal
     const addContentBtn = document.getElementById('addContentBtn');
     const addContentModal = document.getElementById('addContentModal');
@@ -210,16 +212,11 @@ function setupModals() {
     
     if (addContentBtn) {
         addContentBtn.addEventListener('click', () => {
-            // Load courses for dropdown
+            // Load instructor's courses for dropdown
             const courseSelect = document.getElementById('contentCourse');
             courseSelect.innerHTML = '';
             
-            // Sample courses (in a real app, this would come from the server)
-            const courses = [
-                { id: 1, title: "Introduction to Web Development" },
-                { id: 2, title: "Advanced JavaScript Techniques" },
-                { id: 3, title: "React Fundamentals" }
-            ];
+            const courses = Database.getCourses().filter(c => c.instructorId === instructor.id);
             
             courses.forEach(course => {
                 const option = document.createElement('option');
@@ -244,23 +241,52 @@ function setupModals() {
         addContentForm.addEventListener('submit', (e) => {
             e.preventDefault();
             
-            const courseId = document.getElementById('contentCourse').value;
+            const courseId = parseInt(document.getElementById('contentCourse').value);
             const type = document.getElementById('contentType').value;
             const title = document.getElementById('contentTitle').value;
             const description = document.getElementById('contentDescription').value;
             const file = document.getElementById('contentFile').value;
-            const duration = document.getElementById('contentDuration').value;
+            const duration = parseInt(document.getElementById('contentDuration').value);
             
-            // In a real app, you would send this data to the server
-            console.log('New content:', { courseId, type, title, description, file, duration });
-            alert('Content added successfully!');
+            // Add content to course
+            const courses = Database.getCourses();
+            const course = courses.find(c => c.id === courseId);
             
-            // Reset form and close modal
-            addContentForm.reset();
-            addContentModal.style.display = 'none';
-            
-            // Refresh courses list
-            loadMyCoursesTab();
+            if (course) {
+                // Find the course's modules (or create one if none exists)
+                let module = course.modules[course.modules.length - 1];
+                if (!module) {
+                    module = {
+                        id: 1,
+                        title: "New Module",
+                        contents: []
+                    };
+                    course.modules.push(module);
+                }
+                
+                // Add new content
+                const newContent = {
+                    id: module.contents.length > 0 ? Math.max(...module.contents.map(c => c.id)) + 1 : 1,
+                    type,
+                    title,
+                    description,
+                    url: file,
+                    duration,
+                    status: "published"
+                };
+                
+                module.contents.push(newContent);
+                localStorage.setItem('courses', JSON.stringify(courses));
+                
+                alert('Content added successfully!');
+                
+                // Reset form and close modal
+                addContentForm.reset();
+                addContentModal.style.display = 'none';
+                
+                // Refresh courses list
+                loadMyCoursesTab(instructor);
+            }
         });
     }
     
@@ -275,15 +301,23 @@ function setupModals() {
             const category = document.getElementById('instructorCourseCategory').value;
             const image = document.getElementById('instructorCourseImage').value;
             
-            // In a real app, you would send this data to the server
-            console.log('New course:', { title, description, category, image });
+            // Create new course
+            const newCourse = {
+                title,
+                description,
+                instructorId: instructor.id,
+                category,
+                image
+            };
+            
+            Database.addCourse(newCourse);
             alert('Course created successfully!');
             
             // Reset form
             createCourseForm.reset();
             
             // Refresh courses list
-            loadMyCoursesTab();
+            loadMyCoursesTab(instructor);
         });
     }
 }
