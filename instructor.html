@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neusoft Academy - Instructor Panel</title>
+    <title>Instructor Panel - Neusoft Academy</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/instructor.css">
 </head>
 <body>
     <header>
@@ -16,65 +16,184 @@
             <nav>
                 <ul>
                     <li><a href="index.html">Home</a></li>
+                    <li><a href="courses.html">Courses</a></li>
                     <li><a href="instructor.html" class="active">Instructor Panel</a></li>
-                    <li><a href="#" id="logout">Logout</a></li>
+                    <li><a href="#" id="logoutBtn" class="btn">Logout</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <main class="instructor-panel">
+    <section class="instructor-panel">
         <div class="container">
-            <h2>Instructor Dashboard</h2>
+            <div class="instructor-header">
+                <h1>Instructor Dashboard</h1>
+                <p>Manage your courses and content.</p>
+            </div>
             
             <div class="instructor-tabs">
                 <button class="tab-btn active" data-tab="my-courses">My Courses</button>
                 <button class="tab-btn" data-tab="create-course">Create Course</button>
-                <button class="tab-btn" data-tab="students">My Students</button>
+                <button class="tab-btn" data-tab="students">Students</button>
+                <button class="tab-btn" data-tab="analytics">Analytics</button>
             </div>
             
-            <div class="tab-content active" id="my-courses">
-                <h3>My Courses</h3>
-                <button class="btn btn-primary" id="createCourseBtn">Create New Course</button>
+            <div class="tab-content active" id="my-courses-tab">
+                <div class="instructor-actions">
+                    <button class="btn btn-primary" id="addContentBtn">Add Content</button>
+                </div>
                 
-                <div class="course-list" id="instructorCourses">
-                    <!-- Courses will be loaded dynamically -->
+                <div class="courses-list" id="instructorCourses">
+                    <!-- Courses will be loaded via JavaScript -->
                 </div>
             </div>
             
-            <div class="tab-content" id="create-course">
-                <h3>Create New Course</h3>
-                <form id="courseForm">
-                    <div class="form-group">
-                        <label for="courseTitle">Course Title</label>
-                        <input type="text" id="courseTitle" required>
+            <div class="tab-content" id="create-course-tab">
+                <div class="course-form">
+                    <h2>Create New Course</h2>
+                    <form id="createCourseForm">
+                        <div class="form-group">
+                            <label for="instructorCourseTitle">Title</label>
+                            <input type="text" id="instructorCourseTitle" name="instructorCourseTitle" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="instructorCourseDescription">Description</label>
+                            <textarea id="instructorCourseDescription" name="instructorCourseDescription" rows="4" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="instructorCourseCategory">Category</label>
+                            <select id="instructorCourseCategory" name="instructorCourseCategory" required>
+                                <option value="technology">Technology</option>
+                                <option value="business">Business</option>
+                                <option value="design">Design</option>
+                                <option value="language">Language</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="instructorCourseImage">Image URL</label>
+                            <input type="text" id="instructorCourseImage" name="instructorCourseImage" placeholder="https://example.com/image.jpg">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Create Course</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="students-tab">
+                <div class="admin-table-container">
+                    <table class="admin-table" id="studentsTable">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Course</th>
+                                <th>Progress</th>
+                                <th>Last Activity</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Students will be loaded via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="analytics-tab">
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <h3>Total Students</h3>
+                        <div class="analytics-value" id="totalStudents">0</div>
                     </div>
-                    <div class="form-group">
-                        <label for="courseCategory">Category</label>
-                        <select id="courseCategory" required>
-                            <option value="programming">Programming</option>
-                            <option value="design">Design</option>
-                            <option value="business">Business</option>
-                        </select>
+                    <div class="analytics-card">
+                        <h3>Total Courses</h3>
+                        <div class="analytics-value" id="totalCourses">0</div>
                     </div>
-                    <div class="form-group">
-                        <label for="courseDescription">Description</label>
-                        <textarea id="courseDescription" rows="5" required></textarea>
+                    <div class="analytics-card">
+                        <h3>Average Rating</h3>
+                        <div class="analytics-value" id="averageRating">0.0</div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Create Course</button>
-                </form>
+                    <div class="analytics-card">
+                        <h3>Completion Rate</h3>
+                        <div class="analytics-value" id="completionRate">0%</div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="enrollmentChart" width="400" height="200"></canvas>
+                </div>
             </div>
         </div>
-    </main>
+    </section>
+
+    <!-- Modals -->
+    <div class="modal" id="addContentModal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Add Content to Course</h2>
+            <form id="addContentForm">
+                <div class="form-group">
+                    <label for="contentCourse">Course</label>
+                    <select id="contentCourse" name="contentCourse" required>
+                        <!-- Courses will be loaded via JavaScript -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="contentType">Content Type</label>
+                    <select id="contentType" name="contentType" required>
+                        <option value="video">Video</option>
+                        <option value="document">Document</option>
+                        <option value="quiz">Quiz</option>
+                        <option value="assignment">Assignment</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="contentTitle">Title</label>
+                    <input type="text" id="contentTitle" name="contentTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="contentDescription">Description</label>
+                    <textarea id="contentDescription" name="contentDescription" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="contentFile">File URL</label>
+                    <input type="text" id="contentFile" name="contentFile" placeholder="https://example.com/file.pdf" required>
+                </div>
+                <div class="form-group">
+                    <label for="contentDuration">Duration (minutes)</label>
+                    <input type="number" id="contentDuration" name="contentDuration" min="1" value="10">
+                </div>
+                <button type="submit" class="btn btn-primary">Add Content</button>
+            </form>
+        </div>
+    </div>
 
     <footer>
         <div class="container">
-            <p>&copy; 2023 Neusoft Academy. All rights reserved.</p>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Neusoft Academy</h3>
+                    <p>Empowering learners to achieve their career goals through high-quality online education.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="courses.html">Courses</a></li>
+                        <li><a href="instructor.html">Instructor Panel</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <p>Email: info@neusoftacademy.com</p>
+                    <p>Phone: (123) 456-7890</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Neusoft Academy. All rights reserved.</p>
+            </div>
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/instructor.js"></script>
 </body>
 </html>
-<!-- In all protected pages -->
-<li><a href="#" id="logout">Logout</a></li>
