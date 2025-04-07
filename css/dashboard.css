@@ -1,0 +1,222 @@
+/* Dashboard Styles */
+.dashboard {
+    padding: 40px 0;
+}
+
+.dashboard-header {
+    margin-bottom: 40px;
+}
+
+.dashboard-header h1 {
+    color: var(--primary-dark);
+    margin-bottom: 10px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.dashboard-card {
+    background-color: var(--white);
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-card h2 {
+    color: var(--primary-dark);
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+}
+
+.progress-summary {
+    text-align: center;
+}
+
+.progress-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.progress-circle {
+    position: relative;
+    width: 120px;
+    height: 120px;
+}
+
+.progress-ring {
+    transform: rotate(-90deg);
+}
+
+.progress-ring-circle {
+    stroke: var(--primary-color);
+    stroke-dasharray: 326.56;
+    stroke-dashoffset: 326.56;
+    transition: stroke-dashoffset 1s ease;
+}
+
+.progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-dark);
+}
+
+.progress-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat-number {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--gray);
+}
+
+.courses-list {
+    display: grid;
+    gap: 15px;
+}
+
+.course-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-radius: 6px;
+    background-color: var(--gray-lighter);
+    transition: transform 0.3s ease;
+}
+
+.course-item:hover {
+    transform: translateX(5px);
+}
+
+.course-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-right: 15px;
+}
+
+.course-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.course-info {
+    flex-grow: 1;
+}
+
+.course-info h3 {
+    font-size: 1rem;
+    margin-bottom: 5px;
+    color: var(--primary-dark);
+}
+
+.course-progress {
+    width: 100%;
+    height: 5px;
+    background-color: var(--light-color);
+    border-radius: 5px;
+    margin-top: 5px;
+    overflow: hidden;
+}
+
+.course-progress-fill {
+    height: 100%;
+    background-color: var(--primary-color);
+    width: 0%;
+    transition: width 1s ease;
+}
+
+.activity-list {
+    display: grid;
+    gap: 15px;
+}
+
+.activity-item {
+    padding: 15px;
+    border-radius: 6px;
+    background-color: var(--gray-lighter);
+    border-left: 4px solid var(--primary-color);
+}
+
+.activity-item h3 {
+    font-size: 1rem;
+    margin-bottom: 5px;
+    color: var(--primary-dark);
+}
+
+.activity-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--gray);
+}
+
+.certificates-list {
+    display: grid;
+    gap: 15px;
+}
+
+.certificate-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-radius: 6px;
+    background-color: var(--gray-lighter);
+}
+
+.certificate-icon {
+    font-size: 2rem;
+    margin-right: 15px;
+    color: var(--primary-color);
+}
+
+.certificate-info h3 {
+    font-size: 1rem;
+    margin-bottom: 5px;
+    color: var(--primary-dark);
+}
+
+.certificate-date {
+    font-size: 0.8rem;
+    color: var(--gray);
+}
+
+.download-btn {
+    margin-left: auto;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+}
+
+@media (max-width: 768px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .progress-container {
+        flex-direction: column;
+    }
+}
