@@ -1,0 +1,355 @@
+/* Course Detail Styles */
+.course-detail {
+    padding: 40px 0;
+}
+
+.course-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.course-image {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.course-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.course-info h1 {
+    color: var(--primary-dark);
+    margin-bottom: 15px;
+}
+
+.course-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+}
+
+.course-meta span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.course-meta .instructor {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.course-meta .category {
+    background-color: var(--light-color);
+    padding: 3px 8px;
+    border-radius: 4px;
+}
+
+.course-meta .students {
+    color: var(--gray);
+}
+
+.course-meta .rating {
+    color: var(--warning-color);
+}
+
+.course-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.course-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--gray-light);
+    margin-bottom: 30px;
+}
+
+.learning-outcomes,
+.requirements {
+    list-style: none;
+    margin-left: 20px;
+}
+
+.learning-outcomes li,
+.requirements li {
+    margin-bottom: 10px;
+    position: relative;
+    padding-left: 25px;
+}
+
+.learning-outcomes li::before,
+.requirements li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--success-color);
+    font-weight: bold;
+}
+
+.requirements li::before {
+    content: '•';
+    color: var(--primary-color);
+}
+
+.curriculum-progress {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: var(--gray-lighter);
+    border-radius: 8px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: var(--light-color);
+    border-radius: 5px;
+    margin: 10px 0;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: var(--primary-color);
+    width: 0%;
+    transition: width 1s ease;
+}
+
+.progress-text {
+    text-align: right;
+    font-weight: 500;
+    color: var(--primary-dark);
+}
+
+.modules-list {
+    border: 1px solid var(--gray-light);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.module {
+    border-bottom: 1px solid var(--gray-light);
+}
+
+.module:last-child {
+    border-bottom: none;
+}
+
+.module-header {
+    padding: 15px 20px;
+    background-color: var(--gray-lighter);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.module-header h3 {
+    color: var(--primary-dark);
+    font-size: 1rem;
+}
+
+.module-content {
+    padding: 0 20px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+.module.active .module-content {
+    padding: 15px 20px;
+    max-height: 1000px;
+}
+
+.content-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--gray-light);
+}
+
+.content-item:last-child {
+    border-bottom: none;
+}
+
+.content-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: var(--light-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    color: var(--primary-color);
+    flex-shrink: 0;
+}
+
+.content-info {
+    flex-grow: 1;
+}
+
+.content-info h4 {
+    font-size: 0.9rem;
+    color: var(--primary-dark);
+    margin-bottom: 5px;
+}
+
+.content-meta {
+    display: flex;
+    font-size: 0.8rem;
+    color: var(--gray);
+    gap: 15px;
+}
+
+.content-status {
+    margin-left: auto;
+    font-size: 0.8rem;
+    color: var(--success-color);
+}
+
+.content-status.locked {
+    color: var(--gray);
+}
+
+.reviews-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: var(--gray-lighter);
+    border-radius: 8px;
+}
+
+.average-rating {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rating-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--primary-dark);
+}
+
+.rating-stars {
+    font-size: 1.5rem;
+    color: var(--warning-color);
+    letter-spacing: 2px;
+}
+
+.rating-count {
+    font-size: 0.9rem;
+    color: var(--gray);
+}
+
+.reviews-list {
+    display: grid;
+    gap: 20px;
+}
+
+.review-item {
+    padding: 20px;
+    border-radius: 8px;
+    background-color: var(--gray-lighter);
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.review-author {
+    font-weight: 500;
+    color: var(--primary-dark);
+}
+
+.review-date {
+    font-size: 0.8rem;
+    color: var(--gray);
+}
+
+.review-rating {
+    color: var(--warning-color);
+    margin-bottom: 5px;
+}
+
+.review-title {
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+/* Rating Input */
+.rating-input {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    margin-bottom: 15px;
+}
+
+.rating-input input {
+    display: none;
+}
+
+.rating-input label {
+    color: var(--gray-light);
+    font-size: 2rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.rating-input input:checked ~ label,
+.rating-input input:hover ~ label {
+    color: var(--warning-color);
+}
+
+.rating-input label:hover,
+.rating-input label:hover ~ label {
+    color: var(--warning-color);
+}
+
+@media (max-width: 992px) {
+    .course-header {
+        grid-template-columns: 1fr;
+    }
+    
+    .course-image {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .course-info {
+        text-align: center;
+    }
+    
+    .course-actions {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .course-meta {
+        justify-content: center;
+    }
+    
+    .course-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .reviews-summary {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+}
