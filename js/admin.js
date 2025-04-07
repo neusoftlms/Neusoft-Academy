@@ -1,3 +1,4 @@
+// admin.js - Updated to use Database methods
 document.addEventListener('DOMContentLoaded', function() {
     // Check if user is admin
     const currentUser = getCurrentUser();
@@ -43,44 +44,7 @@ function loadUsersTab() {
     const usersTable = document.getElementById('usersTable').getElementsByTagName('tbody')[0];
     usersTable.innerHTML = '';
     
-    // Sample user data (in a real app, this would come from a server)
-    const users = [
-        {
-            id: 1,
-            name: "Admin User",
-            email: "admin@neusoftacademy.com",
-            role: "admin",
-            registeredAt: "2023-01-15"
-        },
-        {
-            id: 2,
-            name: "Instructor One",
-            email: "instructor@neusoftacademy.com",
-            role: "instructor",
-            registeredAt: "2023-02-20"
-        },
-        {
-            id: 3,
-            name: "Student One",
-            email: "student@neusoftacademy.com",
-            role: "student",
-            registeredAt: "2023-03-10"
-        },
-        {
-            id: 4,
-            name: "Student Two",
-            email: "student2@neusoftacademy.com",
-            role: "student",
-            registeredAt: "2023-04-05"
-        },
-        {
-            id: 5,
-            name: "Instructor Two",
-            email: "instructor2@neusoftacademy.com",
-            role: "instructor",
-            registeredAt: "2023-05-12"
-        }
-    ];
+    const users = Database.getUsers();
     
     users.forEach(user => {
         const row = usersTable.insertRow();
@@ -90,12 +54,27 @@ function loadUsersTab() {
             <td>${user.name}</td>
             <td>${user.email}</td>
             <td>${user.role.charAt(0).toUpperCase() + user.role.slice(1)}</td>
-            <td>${user.registeredAt}</td>
+            <td>${new Date(user.registeredAt).toLocaleDateString()}</td>
             <td>
-                <button class="action-btn edit-btn">Edit</button>
-                <button class="action-btn delete-btn">Delete</button>
+                <button class="action-btn edit-btn" data-id="${user.id}">Edit</button>
+                <button class="action-btn delete-btn" data-id="${user.id}">Delete</button>
             </td>
         `;
+    });
+    
+    // Add event listeners to action buttons
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const userId = parseInt(e.target.getAttribute('data-id'));
+            editUser(userId);
+        });
+    });
+    
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const userId = parseInt(e.target.getAttribute('data-id'));
+            deleteUser(userId);
+        });
     });
     
     // Setup search and filter functionality
@@ -128,63 +107,66 @@ function loadUsersTab() {
     }
 }
 
+function editUser(userId) {
+    const users = Database.getUsers();
+    const user = users.find(u => u.id === userId);
+    
+    if (!user) return;
+    
+    // In a real app, you would show an edit form with the user's data
+    alert(`Edit user: ${user.name}\nThis would open an edit form in a real implementation.`);
+}
+
+function deleteUser(userId) {
+    if (confirm('Are you sure you want to delete this user?')) {
+        const users = Database.getUsers();
+        const updatedUsers = users.filter(u => u.id !== userId);
+        localStorage.setItem('users', JSON.stringify(updatedUsers));
+        
+        // Refresh users table
+        loadUsersTab();
+        alert('User deleted successfully!');
+    }
+}
+
 function loadCoursesTab() {
     const coursesTable = document.getElementById('coursesTable').getElementsByTagName('tbody')[0];
     coursesTable.innerHTML = '';
     
-    // Sample course data (in a real app, this would come from a server)
-    const courses = [
-        {
-            id: 1,
-            title: "Introduction to Web Development",
-            instructor: "John Smith",
-            category: "technology",
-            students: 1250
-        },
-        {
-            id: 2,
-            title: "Business Management Fundamentals",
-            instructor: "Sarah Johnson",
-            category: "business",
-            students: 890
-        },
-        {
-            id: 3,
-            title: "Graphic Design Principles",
-            instructor: "Michael Chen",
-            category: "design",
-            students: 2100
-        },
-        {
-            id: 4,
-            title: "Spanish for Beginners",
-            instructor: "Maria Garcia",
-            category: "language",
-            students: 1500
-        },
-        {
-            id: 5,
-            title: "Data Science with Python",
-            instructor: "David Wilson",
-            category: "technology",
-            students: 1800
-        }
-    ];
+    const courses = Database.getCourses();
+    const users = Database.getUsers();
     
     courses.forEach(course => {
+        const instructor = users.find(u => u.id === course.instructorId);
+        
         const row = coursesTable.insertRow();
         
         row.innerHTML = `
             <td>${course.id}</td>
             <td>${course.title}</td>
-            <td>${course.instructor}</td>
+            <td>${instructor ? instructor.name : 'Unknown Instructor'}</td>
             <td>${course.category.charAt(0).toUpperCase() + course.category.slice(1)}</td>
-            <td>${course.students}</td>
+            <td>${course.students.length}</td>
             <td>
-                <button class="action-btn edit-btn">Edit</button>
-                <button class="action-btn delete-btn">Delete</button>
+                <button class="action-btn edit-btn" data-id="${course.id}">Edit</button>
+                <button class="action-btn delete-btn" data-id="${course.id}">Delete</button>
             </td>
         `;
+    });
+    
+    // Add event listeners to action buttons
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const courseId = parseInt(e.target.getAttribute('data-id'));
+            editCourse(courseId);
+        });
+    });
+    
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const courseId = parseInt(e.target.getAttribute('data-id'));
+            deleteCourse(courseId);
+        });
     });
     
     // Setup search and filter functionality
@@ -217,47 +199,63 @@ function loadCoursesTab() {
     }
 }
 
+function editCourse(courseId) {
+    const courses = Database.getCourses();
+    const course = courses.find(c => c.id === courseId);
+    
+    if (!course) return;
+    
+    // In a real app, you would show an edit form with the course's data
+    alert(`Edit course: ${course.title}\nThis would open an edit form in a real implementation.`);
+}
+
+function deleteCourse(courseId) {
+    if (confirm('Are you sure you want to delete this course?')) {
+        const courses = Database.getCourses();
+        const updatedCourses = courses.filter(c => c.id !== courseId);
+        localStorage.setItem('courses', JSON.stringify(updatedCourses));
+        
+        // Also remove any enrollments for this course
+        const enrollments = Database.getEnrollments();
+        const updatedEnrollments = enrollments.filter(e => e.courseId !== courseId);
+        localStorage.setItem('enrollments', JSON.stringify(updatedEnrollments));
+        
+        // Refresh courses table
+        loadCoursesTab();
+        alert('Course deleted successfully!');
+    }
+}
+
 function loadCategoriesTab() {
     const categoriesTable = document.getElementById('categoriesTable').getElementsByTagName('tbody')[0];
     categoriesTable.innerHTML = '';
     
-    // Sample category data (in a real app, this would come from a server)
-    const categories = [
-        {
-            id: 1,
-            name: "Technology",
-            courses: 15
-        },
-        {
-            id: 2,
-            name: "Business",
-            courses: 8
-        },
-        {
-            id: 3,
-            name: "Design",
-            courses: 6
-        },
-        {
-            id: 4,
-            name: "Language",
-            courses: 5
-        }
-    ];
+    const courses = Database.getCourses();
     
-    categories.forEach(category => {
+    // Get unique categories from courses
+    const categories = {};
+    courses.forEach(course => {
+        if (!categories[course.category]) {
+            categories[course.category] = 0;
+        }
+        categories[course.category]++;
+    });
+    
+    // Convert to array for display
+    let id = 1;
+    for (const [name, count] of Object.entries(categories)) {
         const row = categoriesTable.insertRow();
         
         row.innerHTML = `
-            <td>${category.id}</td>
-            <td>${category.name}</td>
-            <td>${category.courses}</td>
+            <td>${id++}</td>
+            <td>${name.charAt(0).toUpperCase() + name.slice(1)}</td>
+            <td>${count}</td>
             <td>
                 <button class="action-btn edit-btn">Edit</button>
                 <button class="action-btn delete-btn">Delete</button>
             </td>
         `;
-    });
+    }
 }
 
 function loadSettingsTab() {
@@ -321,8 +319,15 @@ function setupModals() {
             const password = document.getElementById('newUserPassword').value;
             const role = document.getElementById('newUserRole').value;
             
-            // In a real app, you would send this data to the server
-            console.log('New user:', { name, email, password, role });
+            // Create new user
+            const newUser = {
+                name,
+                email,
+                password,
+                role
+            };
+            
+            Database.addUser(newUser);
             alert('User added successfully!');
             
             // Reset form and close modal
@@ -345,11 +350,7 @@ function setupModals() {
             const instructorSelect = document.getElementById('courseInstructor');
             instructorSelect.innerHTML = '';
             
-            // Sample instructors (in a real app, this would come from the server)
-            const instructors = [
-                { id: 2, name: "Instructor One" },
-                { id: 5, name: "Instructor Two" }
-            ];
+            const instructors = Database.getUsers().filter(u => u.role === 'instructor');
             
             instructors.forEach(instructor => {
                 const option = document.createElement('option');
@@ -376,12 +377,20 @@ function setupModals() {
             
             const title = document.getElementById('courseTitle').value;
             const description = document.getElementById('courseDescription').value;
-            const instructorId = document.getElementById('courseInstructor').value;
+            const instructorId = parseInt(document.getElementById('courseInstructor').value);
             const category = document.getElementById('courseCategory').value;
             const image = document.getElementById('courseImage').value;
             
-            // In a real app, you would send this data to the server
-            console.log('New course:', { title, description, instructorId, category, image });
+            // Create new course
+            const newCourse = {
+                title,
+                description,
+                instructorId,
+                category,
+                image
+            };
+            
+            Database.addCourse(newCourse);
             alert('Course added successfully!');
             
             // Reset form and close modal
