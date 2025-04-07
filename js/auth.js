@@ -1,119 +1,205 @@
-// Authentication Functions
 document.addEventListener('DOMContentLoaded', function() {
-    // Login Form Handling
+    // Check if user is already logged in
+    if (localStorage.getItem('currentUser')) {
+        redirectBasedOnRole();
+    }
+    
+    // Login form handling
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
-        loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
-            // Simulate authentication (in a real app, this would be an API call)
-            if (email && password) {
-                // Store user data in localStorage (simulated)
-                localStorage.setItem('currentUser', JSON.stringify({
-                    email: email,
-                    role: determineUserRole(email) // Simple role determination
-                }));
-                
-                // Redirect based on role
-                const user = JSON.parse(localStorage.getItem('currentUser'));
-                if (user.role === 'admin') {
-                    window.location.href = 'admin.html';
-                } else if (user.role === 'instructor') {
-                    window.location.href = 'instructor.html';
-                } else {
-                    window.location.href = 'dashboard.html';
-                }
-            } else {
-                alert('Please enter both email and password');
-            }
-        });
+        loginForm.addEventListener('submit', handleLogin);
     }
     
-    // Registration Form Handling would go here
-    
-    // Simple role determination based on email
-    function determineUserRole(email) {
-        if (email.includes('@neusoft.admin')) return 'admin';
-        if (email.includes('@neusoft.instructor')) return 'instructor';
-        return 'student';
+    // Registration form handling
+    const registerForm = document.getElementById('registerForm');
+    if (registerForm) {
+        registerForm.addEventListener('submit', handleRegistration);
     }
     
-    // Check if user is logged in on protected pages
-    function checkAuth() {
-        const protectedPages = ['dashboard.html', 'admin.html', 'instructor.html'];
-        const currentPage = window.location.pathname.split('/').pop();
-        
-        if (protectedPages.includes(currentPage) && !localStorage.getItem('currentUser')) {
-            window.location.href = 'login.html';
-        }
+    // Logout button handling
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', handleLogout);
     }
-    
-    checkAuth();
 });
-// Add this to your auth.js file
-function setupLogout() {
-    const logoutButtons = document.querySelectorAll('#logout');
+
+// Sample user data (in a real app, this would come from a server)
+const users = [
+    {
+        id: 1,
+        name: "Admin User",
+        email: "admin@neusoftacademy.com",
+        password: "admin123",
+        role: "admin",
+        registeredAt: new Date(2023, 0, 15)
+    },
+    {
+        id: 2,
+        name: "Instructor One",
+        email: "instructor@neusoftacademy.com",
+        password: "instructor123",
+        role: "instructor",
+        registeredAt: new Date(2023, 1, 20)
+    },
+    {
+        id: 3,
+        name: "Student One",
+        email: "student@neusoftacademy.com",
+        password: "student123",
+        role: "student",
+        registeredAt: new Date(2023, 2, 10)
+    }
+];
+
+function handleLogin(e) {
+    e.preventDefault();
     
-    logoutButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Clear authentication data
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            
-            // Redirect to login page
-            window.location.href = 'login.html';
-        });
-    });
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const rememberMe = document.getElementById('remember').checked;
+    
+    const messageElement = document.getElementById('loginMessage');
+    
+    // Find user by email
+    const user = users.find(u => u.email === email);
+    
+    if (!user) {
+        showMessage(messageElement, 'User with this email not found.', 'error');
+        return;
+    }
+    
+    // Check password
+    if (user.password !== password) {
+        showMessage(messageElement, 'Incorrect password.', 'error');
+        return;
+    }
+    
+    // Login successful
+    const userData = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+    };
+    
+    // Save user data
+    if (rememberMe) {
+        localStorage.setItem('currentUser', JSON.stringify(userData));
+    } else {
+        sessionStorage.setItem('currentUser', JSON.stringify(userData));
+    }
+    
+    showMessage(messageElement, 'Login successful! Redirecting...', 'success');
+    
+    // Redirect based on role
+    setTimeout(() => {
+        redirectBasedOnRole();
+    }, 1500);
 }
 
-// Call this function in your DOMContentLoaded event listener
-document.addEventListener('DOMContentLoaded', function() {
-    // ... your existing code ...
+function handleRegistration(e) {
+    e.preventDefault();
     
-    setupLogout();
+    const name = document.getElementById('fullName').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const role = document.getElementById('userType').value;
+    const termsAccepted = document.getElementById('terms').checked;
     
-    // ... rest of your code ...
-});
-function setupLogout() {
-    const logoutButtons = document.querySelectorAll('#logout');
+    const messageElement = document.getElementById('registerMessage');
     
-    logoutButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            if (confirm('Are you sure you want to logout?')) {
-                // Clear authentication data
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                
-                // Redirect to login page
-                window.location.href = 'login.html';
-            }
-        });
-    });
+    // Validation
+    if (password !== confirmPassword) {
+        showMessage(messageElement, 'Passwords do not match.', 'error');
+        return;
+    }
+    
+    if (!termsAccepted) {
+        showMessage(messageElement, 'You must accept the terms and conditions.', 'error');
+        return;
+    }
+    
+    // Check if email already exists
+    if (users.some(u => u.email === email)) {
+        showMessage(messageElement, 'Email already registered.', 'error');
+        return;
+    }
+    
+    // Create new user (in a real app, this would be sent to the server)
+    const newUser = {
+        id: users.length + 1,
+        name,
+        email,
+        password,
+        role,
+        registeredAt: new Date()
+    };
+    
+    users.push(newUser);
+    
+    // Auto-login the new user
+    const userData = {
+        id: newUser.id,
+        name: newUser.name,
+        email: newUser.email,
+        role: newUser.role
+    };
+    
+    sessionStorage.setItem('currentUser', JSON.stringify(userData));
+    
+    showMessage(messageElement, 'Registration successful! Redirecting...', 'success');
+    
+    // Redirect based on role
+    setTimeout(() => {
+        redirectBasedOnRole();
+    }, 1500);
 }
-function setupLogout() {
-    const logoutButtons = document.querySelectorAll('#logout');
+
+function handleLogout() {
+    // Clear user data from storage
+    localStorage.removeItem('currentUser');
+    sessionStorage.removeItem('currentUser');
     
-    logoutButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            console.log('Before logout - Token:', localStorage.getItem('token'));
-            console.log('Before logout - User:', localStorage.getItem('user'));
-            
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            
-            console.log('After logout - Token:', localStorage.getItem('token'));
-            console.log('After logout - User:', localStorage.getItem('user'));
-            
-            window.location.href = 'login.html';
-        });
-    });
+    // Redirect to login page
+    window.location.href = 'login.html';
+}
+
+function redirectBasedOnRole() {
+    const user = getCurrentUser();
+    
+    if (!user) {
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    switch (user.role) {
+        case 'admin':
+            window.location.href = 'admin.html';
+            break;
+        case 'instructor':
+            window.location.href = 'instructor.html';
+            break;
+        case 'student':
+            window.location.href = 'dashboard.html';
+            break;
+        default:
+            window.location.href = 'index.html';
+    }
+}
+
+function getCurrentUser() {
+    const userData = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
+    return userData ? JSON.parse(userData) : null;
+}
+
+function showMessage(element, text, type) {
+    element.textContent = text;
+    element.className = `message ${type}`;
+    
+    // Clear message after 5 seconds
+    setTimeout(() => {
+        element.textContent = '';
+        element.className = 'message';
+    }, 5000);
 }
