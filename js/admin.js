@@ -407,3 +407,21 @@ function getCurrentUser() {
     const userData = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
     return userData ? JSON.parse(userData) : null;
 }
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if user is admin
+    const currentUser = getCurrentUser();
+    if (!currentUser || currentUser.role !== 'admin') {
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    // Safely set admin name
+    const userNameElement = document.getElementById('userName');
+    if (userNameElement) {
+        userNameElement.textContent = currentUser.name;
+    } else {
+        console.error('userName element not found');
+    }
+    
+    // Rest of your admin.js code...
+});
