@@ -1,6 +1,5 @@
-// database.js - Add this new file
+// Initialize database if empty
 const Database = {
-    // Initialize database if empty
     init: function() {
         if (!localStorage.getItem('users')) {
             const initialUsers = [
@@ -65,9 +64,19 @@ const Database = {
         }
     },
 
+    // Safe JSON parsing with error handling
+    safeParse: function(jsonString) {
+        try {
+            return jsonString ? JSON.parse(jsonString) : null;
+        } catch (e) {
+            console.error('Failed to parse JSON:', e);
+            return null;
+        }
+    },
+
     // User methods
     getUsers: function() {
-        return JSON.parse(localStorage.getItem('users')) || [];
+        return this.safeParse(localStorage.getItem('users')) || [];
     },
 
     addUser: function(user) {
@@ -81,7 +90,7 @@ const Database = {
 
     // Course methods
     getCourses: function() {
-        return JSON.parse(localStorage.getItem('courses')) || [];
+        return this.safeParse(localStorage.getItem('courses')) || [];
     },
 
     addCourse: function(course) {
@@ -97,7 +106,7 @@ const Database = {
 
     // Enrollment methods
     getEnrollments: function() {
-        return JSON.parse(localStorage.getItem('enrollments')) || [];
+        return this.safeParse(localStorage.getItem('enrollments')) || [];
     },
 
     enrollUser: function(userId, courseId) {
