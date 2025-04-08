@@ -1,27 +1,38 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Check if user is already logged in
-    if (getCurrentUser()) {
-        redirectBasedOnRole();
+'use strict';
+
+function getCurrentUser() {
+    const userData = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
+    try {
+        return userData ? JSON.parse(userData) : null;
+    } catch (e) {
+        console.error('Error parsing user data:', e);
+        return null;
+    }
+}
+
+function redirectBasedOnRole() {
+    const user = getCurrentUser();
+    if (!user) {
+        window.location.href = 'login.html';
+        return;
     }
     
-    // Login form handling
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-        loginForm.addEventListener('submit', handleLogin);
+    switch (user.role) {
+        case 'admin': window.location.href = 'admin.html'; break;
+        case 'instructor': window.location.href = 'instructor.html'; break;
+        case 'student': window.location.href = 'dashboard.html'; break;
+        default: window.location.href = 'index.html';
     }
-    
-    // Registration form handling
-    const registerForm = document.getElementById('registerForm');
-    if (registerForm) {
-        registerForm.addEventListener('submit', handleRegistration);
-    }
-    
-    // Logout button handling
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', handleLogout);
-    }
-});
+}
+
+function showMessage(element, text, type) {
+    element.textContent = text;
+    element.className = `message ${type}`;
+    setTimeout(() => {
+        element.textContent = '';
+        element.className = 'message';
+    }, 5000);
+}
 
 function handleLogin(e) {
     e.preventDefault();
@@ -31,8 +42,6 @@ function handleLogin(e) {
     const rememberMe = document.getElementById('remember').checked;
     
     const messageElement = document.getElementById('loginMessage');
-    
-    // Find user by email
     const users = Database.getUsers();
     const user = users.find(u => u.email === email);
     
@@ -41,13 +50,11 @@ function handleLogin(e) {
         return;
     }
     
-    // Check password
     if (user.password !== password) {
         showMessage(messageElement, 'Incorrect password.', 'error');
         return;
     }
     
-    // Login successful
     const userData = {
         id: user.id,
         name: user.name,
@@ -55,7 +62,6 @@ function handleLogin(e) {
         role: user.role
     };
     
-    // Save user data
     if (rememberMe) {
         localStorage.setItem('currentUser', JSON.stringify(userData));
     } else {
@@ -63,11 +69,7 @@ function handleLogin(e) {
     }
     
     showMessage(messageElement, 'Login successful! Redirecting...', 'success');
-    
-    // Redirect based on role
-    setTimeout(() => {
-        redirectBasedOnRole();
-    }, 1500);
+    setTimeout(redirectBasedOnRole, 1500);
 }
 
 function handleRegistration(e) {
@@ -82,7 +84,6 @@ function handleRegistration(e) {
     
     const messageElement = document.getElementById('registerMessage');
     
-    // Validation
     if (password !== confirmPassword) {
         showMessage(messageElement, 'Passwords do not match.', 'error');
         return;
@@ -93,24 +94,15 @@ function handleRegistration(e) {
         return;
     }
     
-    // Check if email already exists
     const users = Database.getUsers();
     if (users.some(u => u.email === email)) {
         showMessage(messageElement, 'Email already registered.', 'error');
         return;
     }
     
-    // Create new user
-    const newUser = {
-        name,
-        email,
-        password,
-        role
-    };
-    
+    const newUser = { name, email, password, role };
     const createdUser = Database.addUser(newUser);
     
-    // Auto-login the new user
     const userData = {
         id: createdUser.id,
         name: createdUser.name,
@@ -119,66 +111,28 @@ function handleRegistration(e) {
     };
     
     sessionStorage.setItem('currentUser', JSON.stringify(userData));
-    
     showMessage(messageElement, 'Registration successful! Redirecting...', 'success');
-    
-    // Redirect based on role
-    setTimeout(() => {
-        redirectBasedOnRole();
-    }, 1500);
+    setTimeout(redirectBasedOnRole, 1500);
 }
 
 function handleLogout(e) {
     if (e) e.preventDefault();
-    
-    // Clear user data from storage
     localStorage.removeItem('currentUser');
     sessionStorage.removeItem('currentUser');
-    
-    // Redirect to homepage
     window.location.href = 'index.html';
 }
 
-function redirectBasedOnRole() {
-    const user = getCurrentUser();
-    
-    if (!user) {
-        window.location.href = 'login.html';
-        return;
+document.addEventListener('DOMContentLoaded', function() {
+    if (getCurrentUser()) {
+        redirectBasedOnRole();
     }
     
-    switch (user.role) {
-        case 'admin':
-            window.location.href = 'admin.html';
-            break;
-        case 'instructor':
-            window.location.href = 'instructor.html';
-            break;
-        case 'student':
-            window.location.href = 'dashboard.html';
-            break;
-        default:
-            window.location.href = 'index.html';
-    }
-}
-
-function getCurrentUser() {
-    const userData = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
-    try {
-        return userData ? JSON.parse(userData) : null;
-    } catch (e) {
-        console.error('Error parsing user data:', e);
-        return null;
-    }
-}
-
-function showMessage(element, text, type) {
-    element.textContent = text;
-    element.className = `message ${type}`;
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) loginForm.addEventListener('submit', handleLogin);
     
-    // Clear message after 5 seconds
-    setTimeout(() => {
-        element.textContent = '';
-        element.className = 'message';
-    }, 5000);
-}
+    const registerForm = document.getElementById('registerForm');
+    if (registerForm) registerForm.addEventListener('submit', handleRegistration);
+    
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
+});
