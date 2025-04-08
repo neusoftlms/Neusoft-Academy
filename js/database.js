@@ -1,4 +1,5 @@
-// Initialize database if empty
+'use strict';
+
 const Database = {
     init: function() {
         if (!localStorage.getItem('users')) {
@@ -64,7 +65,6 @@ const Database = {
         }
     },
 
-    // Safe JSON parsing with error handling
     safeParse: function(jsonString) {
         try {
             return jsonString ? JSON.parse(jsonString) : null;
@@ -74,7 +74,6 @@ const Database = {
         }
     },
 
-    // User methods
     getUsers: function() {
         return this.safeParse(localStorage.getItem('users')) || [];
     },
@@ -88,7 +87,6 @@ const Database = {
         return user;
     },
 
-    // Course methods
     getCourses: function() {
         return this.safeParse(localStorage.getItem('courses')) || [];
     },
@@ -104,7 +102,6 @@ const Database = {
         return course;
     },
 
-    // Enrollment methods
     getEnrollments: function() {
         return this.safeParse(localStorage.getItem('enrollments')) || [];
     },
@@ -122,7 +119,6 @@ const Database = {
             });
             localStorage.setItem('enrollments', JSON.stringify(enrollments));
             
-            // Add student to course
             const courses = this.getCourses();
             const course = courses.find(c => c.id === courseId);
             if (course && !course.students.includes(userId)) {
@@ -133,5 +129,4 @@ const Database = {
     }
 };
 
-// Initialize database when the script loads
 Database.init();
