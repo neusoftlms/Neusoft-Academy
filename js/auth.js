@@ -1,4 +1,3 @@
-// auth.js - Updated version
 document.addEventListener('DOMContentLoaded', function() {
     // Check if user is already logged in
     if (getCurrentUser()) {
@@ -129,9 +128,8 @@ function handleRegistration(e) {
     }, 1500);
 }
 
-// ... (keep the remaining functions the same)
 function handleLogout(e) {
-    e.preventDefault();
+    if (e) e.preventDefault();
     
     // Clear user data from storage
     localStorage.removeItem('currentUser');
@@ -139,4 +137,48 @@ function handleLogout(e) {
     
     // Redirect to homepage
     window.location.href = 'index.html';
+}
+
+function redirectBasedOnRole() {
+    const user = getCurrentUser();
+    
+    if (!user) {
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    switch (user.role) {
+        case 'admin':
+            window.location.href = 'admin.html';
+            break;
+        case 'instructor':
+            window.location.href = 'instructor.html';
+            break;
+        case 'student':
+            window.location.href = 'dashboard.html';
+            break;
+        default:
+            window.location.href = 'index.html';
+    }
+}
+
+function getCurrentUser() {
+    const userData = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
+    try {
+        return userData ? JSON.parse(userData) : null;
+    } catch (e) {
+        console.error('Error parsing user data:', e);
+        return null;
+    }
+}
+
+function showMessage(element, text, type) {
+    element.textContent = text;
+    element.className = `message ${type}`;
+    
+    // Clear message after 5 seconds
+    setTimeout(() => {
+        element.textContent = '';
+        element.className = 'message';
+    }, 5000);
 }
