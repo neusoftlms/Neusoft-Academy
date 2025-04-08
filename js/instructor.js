@@ -326,3 +326,34 @@ function getCurrentUser() {
     const userData = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
     return userData ? JSON.parse(userData) : null;
 }
+// Before (if using dynamic configuration)
+const dynamicConfig = `{type:'line',data:{labels:['Jan','Feb','Mar'],datasets:[{data:[10,20,30]}]}`;
+const chart = new Chart(ctx, eval('(' + dynamicConfig + ')'));
+
+// After (use static configuration)
+const chart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    datasets: [{
+      label: 'Course Enrollments',
+      data: [120, 190, 170, 220, 280, 350],
+      backgroundColor: 'rgba(24, 91, 159, 0.2)',
+      borderColor: 'rgba(24, 91, 159, 1)',
+      borderWidth: 2,
+      tension: 0.4,
+      fill: true
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { position: 'top' },
+      title: { 
+        display: true, 
+        text: 'Monthly Enrollment Trends' 
+      }
+    },
+    scales: { y: { beginAtZero: true } }
+  }
+});
