@@ -1,56 +1,144 @@
-/* Mobile First Approach */
-@media (max-width: 767px) {
-    header .container {
+/* Responsive Styles for All Devices */
+@media (max-width: 1200px) {
+    /* Adjustments for large desktops */
+}
+
+@media (max-width: 992px) {
+    /* Adjustments for medium devices (tablets, small laptops) */
+    .header .logo h1 {
+        font-size: 20px;
+    }
+    
+    .hero-content h2 {
+        font-size: 36px;
+    }
+    
+    .features {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .course-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Adjustments for small tablets */
+    .header {
+        padding: 15px;
+    }
+    
+    .main-nav {
+        position: fixed;
+        top: 80px;
+        left: 0;
+        width: 100%;
+        background-color: #2c3e50;
         flex-direction: column;
+        align-items: center;
+        padding: 20px 0;
+        transform: translateY(-100%);
+        opacity: 0;
+        transition: all 0.3s;
+        z-index: 100;
+    }
+    
+    .main-nav.active {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    
+    .main-nav ul {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .main-nav li {
+        width: 100%;
         text-align: center;
     }
     
-    nav ul {
+    .main-nav li a {
+        padding: 15px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .mobile-menu-toggle {
+        display: block;
+    }
+    
+    .hero {
+        padding: 80px 0;
+    }
+    
+    .hero-content h2 {
+        font-size: 30px;
+    }
+    
+    .hero-buttons {
         flex-direction: column;
-        margin-top: 1rem;
+        gap: 10px;
     }
     
-    nav ul li {
-        margin: 0.5rem 0;
-    }
-    
-    .features .container {
+    .features {
         grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .footer-content {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 576px) {
+    /* Adjustments for mobile devices */
+    .header .logo h1 {
+        font-size: 18px;
+    }
+    
+    .hero-content h2 {
+        font-size: 24px;
+    }
+    
+    .hero-content p {
+        font-size: 16px;
     }
     
     .course-grid {
         grid-template-columns: 1fr;
     }
     
-    .admin-table {
-        display: block;
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .footer-section {
+        text-align: center;
+    }
+    
+    /* Dashboard and admin responsive styles */
+    .stats-cards, .admin-stats-cards, .instructor-stats-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .course-progress-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .table-responsive {
         overflow-x: auto;
     }
-    
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
 }
 
-/* Tablet Styles */
-@media (min-width: 768px) and (max-width: 1023px) {
-    .course-grid {
-        grid-template-columns: repeat(2, 1fr);
+@media (max-width: 400px) {
+    /* Extra small devices */
+    .hero-content h2 {
+        font-size: 22px;
     }
     
-    .dashboard-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-/* Desktop Styles */
-@media (min-width: 1024px) {
-    .course-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-    
-    .dashboard-grid {
-        grid-template-columns: 2fr 1fr;
+    .btn {
+        padding: 10px 15px;
+        font-size: 14px;
     }
 }
