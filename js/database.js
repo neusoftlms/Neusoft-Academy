@@ -1,132 +1,171 @@
-'use strict';
+// This would typically be replaced with actual database connections in a real application
+// For this demo, we'll use a mock database with sample data
 
-const Database = {
-    init: function() {
-        if (!localStorage.getItem('users')) {
-            const initialUsers = [
-                {
-                    id: 1,
-                    name: "Admin User",
-                    email: "admin@neusoftacademy.com",
-                    password: "admin123",
-                    role: "admin",
-                    registeredAt: new Date(2023, 0, 15).toISOString()
-                },
-                {
-                    id: 2,
-                    name: "Instructor One",
-                    email: "instructor@neusoftacademy.com",
-                    password: "instructor123",
-                    role: "instructor",
-                    registeredAt: new Date(2023, 1, 20).toISOString()
-                },
-                {
-                    id: 3,
-                    name: "Student One",
-                    email: "student@neusoftacademy.com",
-                    password: "student123",
-                    role: "student",
-                    registeredAt: new Date(2023, 2, 10).toISOString()
-                }
-            ];
-            localStorage.setItem('users', JSON.stringify(initialUsers));
+const database = {
+    users: [
+        {
+            id: 1,
+            name: 'Admin User',
+            email: 'admin@example.com',
+            password: 'admin123',
+            role: 'admin',
+            avatar: 'assets/images/admin-avatar.jpg',
+            joined: '2023-01-15'
+        },
+        {
+            id: 2,
+            name: 'Prof. John Smith',
+            email: 'instructor@example.com',
+            password: 'instructor123',
+            role: 'instructor',
+            avatar: 'assets/images/instructor-avatar.jpg',
+            joined: '2023-02-20',
+            bio: 'Senior instructor with 10 years of experience',
+            courses: [1, 2]
+        },
+        {
+            id: 3,
+            name: 'John Doe',
+            email: 'student@example.com',
+            password: 'student123',
+            role: 'student',
+            avatar: 'assets/images/user-avatar.jpg',
+            joined: '2023-03-10',
+            enrolledCourses: [1, 3],
+            progress: [
+                { courseId: 1, progress: 65 },
+                { courseId: 3, progress: 45 }
+            ]
         }
-
-        if (!localStorage.getItem('courses')) {
-            const initialCourses = [
+    ],
+    courses: [
+        {
+            id: 1,
+            title: 'Introduction to Programming',
+            description: 'Learn the fundamentals of programming with Python.',
+            instructor: 2,
+            category: 'Programming',
+            image: 'assets/images/course1.jpg',
+            price: 49.99,
+            duration: '8 weeks',
+            students: 245,
+            rating: 4.5,
+            reviews: 123,
+            createdAt: '2023-02-25',
+            status: 'published',
+            curriculum: [
                 {
-                    id: 1,
-                    title: "Introduction to Web Development",
-                    instructorId: 2,
-                    category: "technology",
-                    description: "Learn the fundamentals of web development with HTML, CSS, and JavaScript.",
-                    image: "https://via.placeholder.com/800x450",
-                    students: [3],
-                    createdAt: new Date(2023, 2, 1).toISOString(),
-                    modules: [
-                        {
-                            id: 1,
-                            title: "Getting Started",
-                            contents: [
-                                { id: 1, type: "video", title: "Welcome to the Course", duration: 5, url: "https://example.com/video1", status: "published" },
-                                { id: 2, type: "document", title: "Course Syllabus", duration: 10, url: "https://example.com/doc1", status: "published" }
-                            ]
-                        }
+                    week: 1,
+                    title: 'Getting Started',
+                    lessons: [
+                        'Introduction to Programming',
+                        'Setting Up Your Environment',
+                        'First Python Program'
                     ]
                 }
-            ];
-            localStorage.setItem('courses', JSON.stringify(initialCourses));
+            ]
+        },
+        {
+            id: 2,
+            title: 'Web Development Fundamentals',
+            description: 'Build modern websites with HTML, CSS, and JavaScript.',
+            instructor: 2,
+            category: 'Web Development',
+            image: 'assets/images/course2.jpg',
+            price: 59.99,
+            duration: '10 weeks',
+            students: 180,
+            rating: 4.7,
+            reviews: 95,
+            createdAt: '2023-03-15',
+            status: 'published'
+        },
+        {
+            id: 3,
+            title: 'Database Systems',
+            description: 'Learn SQL and database design principles.',
+            instructor: 1,
+            category: 'Data Science',
+            image: 'assets/images/course3.jpg',
+            price: 39.99,
+            duration: '6 weeks',
+            students: 120,
+            rating: 4.3,
+            reviews: 45,
+            createdAt: '2023-04-05',
+            status: 'published'
         }
-
-        if (!localStorage.getItem('enrollments')) {
-            localStorage.setItem('enrollments', JSON.stringify([
-                { userId: 3, courseId: 1, progress: 25, enrolledAt: new Date().toISOString() }
-            ]));
+    ],
+    announcements: [
+        {
+            id: 1,
+            title: 'System Maintenance',
+            content: 'The platform will be down for maintenance on Friday night.',
+            author: 1,
+            createdAt: '2023-05-10',
+            audience: 'all'
+        },
+        {
+            id: 2,
+            title: 'New Course Available',
+            content: 'Check out our new course on Mobile App Development!',
+            author: 2,
+            createdAt: '2023-05-08',
+            audience: 'students'
         }
-    },
+    ]
+};
 
-    safeParse: function(jsonString) {
-        try {
-            return jsonString ? JSON.parse(jsonString) : null;
-        } catch (e) {
-            console.error('Failed to parse JSON:', e);
-            return null;
+// Database functions
+const db = {
+    // User functions
+    getUserByEmail: function(email) {
+        return this.users.find(user => user.email === email);
+    },
+    
+    getUserById: function(id) {
+        return this.users.find(user => user.id === id);
+    },
+    
+    validateUser: function(email, password) {
+        const user = this.getUserByEmail(email);
+        if (user && user.password === password) {
+            return user;
         }
+        return null;
     },
-
-    getUsers: function() {
-        return this.safeParse(localStorage.getItem('users')) || [];
+    
+    // Course functions
+    getAllCourses: function() {
+        return this.courses;
     },
-
-    addUser: function(user) {
-        const users = this.getUsers();
-        user.id = users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1;
-        user.registeredAt = new Date().toISOString();
-        users.push(user);
-        localStorage.setItem('users', JSON.stringify(users));
-        return user;
+    
+    getCourseById: function(id) {
+        return this.courses.find(course => course.id === id);
     },
-
-    getCourses: function() {
-        return this.safeParse(localStorage.getItem('courses')) || [];
+    
+    getCoursesByInstructor: function(instructorId) {
+        return this.courses.filter(course => course.instructor === instructorId);
     },
-
-    addCourse: function(course) {
-        const courses = this.getCourses();
-        course.id = courses.length > 0 ? Math.max(...courses.map(c => c.id)) + 1 : 1;
-        course.createdAt = new Date().toISOString();
-        course.students = [];
-        course.modules = [];
-        courses.push(course);
-        localStorage.setItem('courses', JSON.stringify(courses));
-        return course;
+    
+    // Announcement functions
+    getAnnouncements: function() {
+        return this.announcements;
     },
-
-    getEnrollments: function() {
-        return this.safeParse(localStorage.getItem('enrollments')) || [];
-    },
-
-    enrollUser: function(userId, courseId) {
-        const enrollments = this.getEnrollments();
-        const existing = enrollments.find(e => e.userId === userId && e.courseId === courseId);
-        
-        if (!existing) {
-            enrollments.push({
-                userId,
-                courseId,
-                progress: 0,
-                enrolledAt: new Date().toISOString()
-            });
-            localStorage.setItem('enrollments', JSON.stringify(enrollments));
-            
-            const courses = this.getCourses();
-            const course = courses.find(c => c.id === courseId);
-            if (course && !course.students.includes(userId)) {
-                course.students.push(userId);
-                localStorage.setItem('courses', JSON.stringify(courses));
-            }
-        }
+    
+    // Other utility functions
+    getInstructorName: function(id) {
+        const user = this.getUserById(id);
+        return user ? user.name : 'Unknown Instructor';
     }
 };
 
-Database.init();
+// Make database available globally for demo purposes
+window.db = db;
+
+// Initialize database (in a real app, this would connect to a real database)
+function initDatabase() {
+    console.log('Database initialized with sample data');
+}
+
+initDatabase();
