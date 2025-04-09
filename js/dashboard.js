@@ -1,178 +1,171 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Sample data for dashboard
-    const dashboardData = {
-        courses: [
-            {
-                id: 1,
-                title: 'Introduction to Programming',
-                instructor: 'Prof. Smith',
-                progress: 65,
-                image: 'assets/images/course1.jpg',
-                lastAccessed: '2 days ago'
-            },
-            {
-                id: 2,
-                title: 'Web Development',
-                instructor: 'Prof. Johnson',
-                progress: 85,
-                image: 'assets/images/course2.jpg',
-                lastAccessed: '1 day ago'
-            },
-            {
-                id: 3,
-                title: 'Database Systems',
-                instructor: 'Prof. Williams',
-                progress: 45,
-                image: 'assets/images/course3.jpg',
-                lastAccessed: '3 days ago'
-            }
-        ],
-        assignments: [
-            {
-                id: 1,
-                title: 'Programming Assignment 3',
-                course: 'Introduction to Programming',
-                due: 'tomorrow',
-                description: 'Implement a Python program to solve the given problem.'
-            },
-            {
-                id: 2,
-                title: 'Web Project',
-                course: 'Web Development',
-                due: 'in 3 days',
-                description: 'Create a responsive website using Bootstrap.'
-            },
-            {
-                id: 3,
-                title: 'Database Design',
-                course: 'Database Systems',
-                due: 'in 1 week',
-                description: 'Design a database schema for the given requirements.'
-            }
-        ],
-        announcements: [
-            {
-                id: 1,
-                title: 'Web Development Class Canceled',
-                content: 'The Web Development class scheduled for tomorrow has been canceled.',
-                author: 'Prof. Smith',
-                time: '2 hours ago'
-            },
-            {
-                id: 2,
-                title: 'New Course Material Available',
-                content: 'New lecture slides and exercises have been uploaded for Database Systems.',
-                author: 'Prof. Johnson',
-                time: '1 day ago'
-            },
-            {
-                id: 3,
-                title: 'Exam Schedule Updated',
-                content: 'The final exam schedule has been updated. Please check the new dates.',
-                author: 'Academic Office',
-                time: '3 days ago'
-            }
-        ]
-    };
+// This would typically be replaced with actual database connections in a real application
+// For this demo, we'll use a mock database with sample data
 
-    // Load course progress
-    function loadCourseProgress() {
-        const courseProgressContainer = document.getElementById('courseProgress');
-        
-        courseProgressContainer.innerHTML = dashboardData.courses.map(course => `
-            <div class="course-progress-item" data-course-id="${course.id}">
-                <img src="${course.image}" alt="${course.title}" class="course-progress-image">
-                <div class="course-progress-info">
-                    <h4>${course.title}</h4>
-                    <p>${course.instructor}</p>
-                    <div class="progress">
-                        <div class="progress-bar" style="width: ${course.progress}%"></div>
-                    </div>
-                </div>
-            </div>
-        `).join('');
+const database = {
+    users: [
+        {
+            id: 1,
+            name: 'Admin User',
+            email: 'admin@example.com',
+            password: 'admin123',
+            role: 'admin',
+            avatar: 'assets/images/admin-avatar.jpg',
+            joined: '2023-01-15'
+        },
+        {
+            id: 2,
+            name: 'Prof. John Smith',
+            email: 'instructor@example.com',
+            password: 'instructor123',
+            role: 'instructor',
+            avatar: 'assets/images/instructor-avatar.jpg',
+            joined: '2023-02-20',
+            bio: 'Senior instructor with 10 years of experience',
+            courses: [1, 2]
+        },
+        {
+            id: 3,
+            name: 'John Doe',
+            email: 'student@example.com',
+            password: 'student123',
+            role: 'student',
+            avatar: 'assets/images/user-avatar.jpg',
+            joined: '2023-03-10',
+            enrolledCourses: [1, 3],
+            progress: [
+                { courseId: 1, progress: 65 },
+                { courseId: 3, progress: 45 }
+            ]
+        }
+    ],
+    courses: [
+        {
+            id: 1,
+            title: 'Introduction to Programming',
+            description: 'Learn the fundamentals of programming with Python.',
+            instructor: 2,
+            category: 'Programming',
+            image: 'assets/images/course1.jpg',
+            price: 49.99,
+            duration: '8 weeks',
+            students: 245,
+            rating: 4.5,
+            reviews: 123,
+            createdAt: '2023-02-25',
+            status: 'published',
+            curriculum: [
+                {
+                    week: 1,
+                    title: 'Getting Started',
+                    lessons: [
+                        'Introduction to Programming',
+                        'Setting Up Your Environment',
+                        'First Python Program'
+                    ]
+                }
+            ]
+        },
+        {
+            id: 2,
+            title: 'Web Development Fundamentals',
+            description: 'Build modern websites with HTML, CSS, and JavaScript.',
+            instructor: 2,
+            category: 'Web Development',
+            image: 'assets/images/course2.jpg',
+            price: 59.99,
+            duration: '10 weeks',
+            students: 180,
+            rating: 4.7,
+            reviews: 95,
+            createdAt: '2023-03-15',
+            status: 'published'
+        },
+        {
+            id: 3,
+            title: 'Database Systems',
+            description: 'Learn SQL and database design principles.',
+            instructor: 1,
+            category: 'Data Science',
+            image: 'assets/images/course3.jpg',
+            price: 39.99,
+            duration: '6 weeks',
+            students: 120,
+            rating: 4.3,
+            reviews: 45,
+            createdAt: '2023-04-05',
+            status: 'published'
+        }
+    ],
+    announcements: [
+        {
+            id: 1,
+            title: 'System Maintenance',
+            content: 'The platform will be down for maintenance on Friday night.',
+            author: 1,
+            createdAt: '2023-05-10',
+            audience: 'all'
+        },
+        {
+            id: 2,
+            title: 'New Course Available',
+            content: 'Check out our new course on Mobile App Development!',
+            author: 2,
+            createdAt: '2023-05-08',
+            audience: 'students'
+        }
+    ]
+};
+
+// Database functions
+const db = {
+    // User functions
+    getUserByEmail: function(email) {
+        return this.users.find(user => user.email === email);
+    },
+    
+    getUserById: function(id) {
+        return this.users.find(user => user.id === id);
+    },
+    
+    validateUser: function(email, password) {
+        const user = this.getUserByEmail(email);
+        if (user && user.password === password) {
+            return user;
+        }
+        return null;
+    },
+    
+    // Course functions
+    getAllCourses: function() {
+        return this.courses;
+    },
+    
+    getCourseById: function(id) {
+        return this.courses.find(course => course.id === id);
+    },
+    
+    getCoursesByInstructor: function(instructorId) {
+        return this.courses.filter(course => course.instructor === instructorId);
+    },
+    
+    // Announcement functions
+    getAnnouncements: function() {
+        return this.announcements;
+    },
+    
+    // Other utility functions
+    getInstructorName: function(id) {
+        const user = this.getUserById(id);
+        return user ? user.name : 'Unknown Instructor';
     }
+};
 
-    // Load upcoming assignments
-    function loadUpcomingAssignments() {
-        const assignmentsList = document.getElementById('upcomingAssignments');
-        
-        assignmentsList.innerHTML = dashboardData.assignments.map(assignment => `
-            <li class="assignment-item" data-assignment-id="${assignment.id}">
-                <div class="assignment-info">
-                    <h4>${assignment.title}</h4>
-                    <p>${assignment.course}</p>
-                </div>
-                <span class="assignment-due">Due ${assignment.due}</span>
-            </li>
-        `).join('');
-    }
+// Make database available globally for demo purposes
+window.db = db;
 
-    // Load recent announcements
-    function loadRecentAnnouncements() {
-        const announcementsList = document.getElementById('recentAnnouncements');
-        
-        announcementsList.innerHTML = dashboardData.announcements.map(announcement => `
-            <li class="announcement-item" data-announcement-id="${announcement.id}">
-                <div class="announcement-header">
-                    <h4>${announcement.title}</h4>
-                    <span>${announcement.time}</span>
-                </div>
-                <div class="announcement-content">
-                    <p>${announcement.content}</p>
-                </div>
-                <div class="announcement-footer">
-                    <span>${announcement.author}</span>
-                </div>
-            </li>
-        `).join('');
-    }
+// Initialize database (in a real app, this would connect to a real database)
+function initDatabase() {
+    console.log('Database initialized with sample data');
+}
 
-    // Initialize calendar
-    function initCalendar() {
-        // In a real app, this would use FullCalendar or similar
-        const calendarEl = document.getElementById('calendar');
-        calendarEl.innerHTML = `
-            <div class="calendar-placeholder" style="height: 100%; display: flex; align-items: center; justify-content: center; color: #777;">
-                Calendar would display here with upcoming events and deadlines
-            </div>
-        `;
-    }
-
-    // Setup event listeners
-    function setupEventListeners() {
-        // Course progress items
-        document.addEventListener('click', function(e) {
-            if (e.target.closest('.course-progress-item')) {
-                const courseId = e.target.closest('.course-progress-item').getAttribute('data-course-id');
-                const course = dashboardData.courses.find(c => c.id == courseId);
-                alert(`Opening course: ${course.title}\nProgress: ${course.progress}%`);
-            }
-            
-            // Assignment items
-            if (e.target.closest('.assignment-item')) {
-                const assignmentId = e.target.closest('.assignment-item').getAttribute('data-assignment-id');
-                const assignment = dashboardData.assignments.find(a => a.id == assignmentId);
-                alert(`Assignment: ${assignment.title}\nCourse: ${assignment.course}\nDue: ${assignment.due}`);
-            }
-            
-            // Announcement items
-            if (e.target.closest('.announcement-item')) {
-                const announcementId = e.target.closest('.announcement-item').getAttribute('data-announcement-id');
-                const announcement = dashboardData.announcements.find(a => a.id == announcementId);
-                alert(`Announcement: ${announcement.title}\nFrom: ${announcement.author}\n\n${announcement.content}`);
-            }
-        });
-    }
-
-    // Initialize dashboard
-    function initDashboard() {
-        loadCourseProgress();
-        loadUpcomingAssignments();
-        loadRecentAnnouncements();
-        initCalendar();
-        setupEventListeners();
-    }
-
-    initDashboard();
-});
+initDatabase();
