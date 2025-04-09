@@ -1,139 +1,242 @@
-<!-- course-management.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Course Management | Neusoft LMS</title>
+    <title>Course Management - Neusoft Academy</title>
+    <link rel="stylesheet" href="../css/admin.css">
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/responsive.css">
-      <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div id="branding">
-                <h1><span class="highlight">Neusoft</span> LMS</h1>
+    <div class="admin-container">
+        <!-- Admin Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <img src="../assets/images/logo-white.png" alt="Neusoft Academy Logo">
+                <h3>Admin Panel</h3>
             </div>
-            <nav>
+            <nav class="sidebar-nav">
                 <ul>
-                    <li><a href="../index.html">Home</a></li>
-                    <li><a href="courses.html">Courses</a></li>
-                    <li class="current"><a href="course-management.html">Course Management</a></li>
-                    <li><a href="#" id="logout-btn">Logout</a></li>
+                    <li>
+                        <a href="admin.html">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="course-management.html" class="active">
+                            <i class="fas fa-book"></i>
+                            <span>Course Management</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-users"></i>
+                            <span>User Management</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                            <span>Instructors</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-graduation-cap"></i>
+                            <span>Students</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </a>
+                    </li>
                 </ul>
             </nav>
-        </div>
-    </header>
-
-    <section id="main">
-        <div class="container">
-            <article id="main-col">
-                <h1 class="page-title">Course Management</h1>
-                
-                <div class="admin-section">
-                    <h2>Create New Course</h2>
-                    <form id="course-form" enctype="multipart/form-data">
-                        <div class="form-group">
-                            <label for="course-title">Course Title*</label>
-                            <input type="text" id="course-title" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="course-category">Category*</label>
-                            <select id="course-category" required>
-                                <option value="">Select Category</option>
-                                <option value="programming">Programming</option>
-                                <option value="business">Business</option>
-                                <option value="design">Design</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="course-description">Description*</label>
-                            <textarea id="course-description" rows="5" required></textarea>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="course-image">Thumbnail Image*</label>
-                            <input type="file" id="course-image" accept="image/*" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="course-content">Course Materials (ZIP)*</label>
-                            <input type="file" id="course-content" accept=".zip,.rar" required>
-                        </div>
-                        
-                        <button type="submit" class="button_1">Create Course</button>
-                    </form>
-                </div>
-                
-                <div class="admin-section">
-                    <h2>Existing Courses</h2>
-                    <div id="course-list" class="course-list">
-                        <!-- Courses will be loaded here -->
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <img src="../assets/images/admin-avatar.jpg" alt="Admin Avatar">
+                    <div class="user-info">
+                        <h5>Admin User</h5>
+                        <p>Super Admin</p>
                     </div>
                 </div>
-            </article>
-        </div>
-    </section>
+                <a href="../index.html" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
 
-    <!-- Edit Course Modal -->
-    <div id="edit-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Edit Course</h2>
-            <form id="edit-course-form">
-                <!-- Fields will be populated by JS -->
-            </form>
+        <!-- Main Content -->
+        <main class="admin-main-content">
+            <header class="admin-header">
+                <div class="header-left">
+                    <h2>Course Management</h2>
+                    <div class="breadcrumb">
+                        <a href="../index.html">Home</a> / 
+                        <a href="admin.html">Admin</a> / 
+                        <span>Course Management</span>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="search-box">
+                        <input type="text" placeholder="Search courses...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <button class="btn btn-primary" id="addCourseBtn">
+                        <i class="fas fa-plus"></i> Add Course
+                    </button>
+                </div>
+            </header>
+
+            <div class="admin-content">
+                <!-- Course Management Tools -->
+                <div class="course-management-tools">
+                    <div class="filter-controls">
+                        <select class="form-control" id="categoryFilter">
+                            <option value="">All Categories</option>
+                            <option value="programming">Programming</option>
+                            <option value="web-development">Web Development</option>
+                            <option value="data-science">Data Science</option>
+                            <option value="cybersecurity">Cybersecurity</option>
+                        </select>
+                        <select class="form-control" id="statusFilter">
+                            <option value="">All Statuses</option>
+                            <option value="published">Published</option>
+                            <option value="draft">Draft</option>
+                            <option value="archived">Archived</option>
+                        </select>
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Courses Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>All Courses</h3>
+                        <div class="card-actions">
+                            <div class="pagination-info">
+                                Showing 1 to 10 of 32 courses
+                            </div>
+                            <div class="pagination-controls">
+                                <button class="btn btn-sm" disabled>
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <button class="btn btn-sm">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Course Title</th>
+                                        <th>Instructor</th>
+                                        <th>Category</th>
+                                        <th>Students</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="coursesTable">
+                                    <!-- Data will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Course Modal -->
+    <div class="modal fade" id="addCourseModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Course</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addCourseForm">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label for="courseTitle">Course Title</label>
+                                    <input type="text" id="courseTitle" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="courseDescription">Description</label>
+                                    <textarea id="courseDescription" class="form-control" rows="4" required></textarea>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="courseCategory">Category</label>
+                                            <select id="courseCategory" class="form-control" required>
+                                                <option value="">Select Category</option>
+                                                <option value="programming">Programming</option>
+                                                <option value="web-development">Web Development</option>
+                                                <option value="data-science">Data Science</option>
+                                                <option value="cybersecurity">Cybersecurity</option>
+                                                <option value="cloud-computing">Cloud Computing</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="courseInstructor">Instructor</label>
+                                            <select id="courseInstructor" class="form-control" required>
+                                                <option value="">Select Instructor</option>
+                                                <!-- Instructors will be loaded here -->
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="courseThumbnail">Course Thumbnail</label>
+                                    <div class="thumbnail-upload">
+                                        <img id="thumbnailPreview" src="../assets/images/placeholder-thumbnail.jpg" alt="Thumbnail Preview">
+                                        <input type="file" id="courseThumbnail" accept="image/*">
+                                        <label for="courseThumbnail" class="btn btn-sm btn-secondary">Upload Image</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="coursePrice">Price ($)</label>
+                                    <input type="number" id="coursePrice" class="form-control" min="0" step="0.01" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="courseStatus">Status</label>
+                                    <select id="courseStatus" class="form-control" required>
+                                        <option value="draft">Draft</option>
+                                        <option value="published">Published</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveCourseBtn">Save Course</button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <footer>
-        <p>Neusoft Learning Management System, Copyright &copy; 2023</p>
-    </footer>
-
-    <script src="../js/course-management.js"></script>
-    <script src="js/database.js"></script>
+    <script src="../js/admin.js"></script>
+    <script src="../js/navigation.js"></script>
 </body>
 </html>
-const API_BASE = 'http://localhost:5000/api'; // Change to your backend URL
-
-async function loadCourses() {
-    try {
-        const response = await fetch(`${API_BASE}/courses`);
-        courses = await response.json();
-        renderCourses();
-    } catch (err) {
-        console.error('Error loading courses:', err);
-    }
-}
-
-async function handleCourseSubmit(e) {
-    e.preventDefault();
-    
-    const formData = new FormData();
-    formData.append('title', document.getElementById('course-title').value);
-    formData.append('category', document.getElementById('course-category').value);
-    formData.append('description', document.getElementById('course-description').value);
-    formData.append('image', document.getElementById('course-image').files[0]);
-    formData.append('content', document.getElementById('course-content').files[0]);
-
-    try {
-        const response = await fetch(`${API_BASE}/courses`, {
-            method: 'POST',
-            body: formData
-        });
-        
-        if (response.ok) {
-            alert('Course created successfully!');
-            courseForm.reset();
-            loadCourses();
-        } else {
-            throw new Error('Failed to create course');
-        }
-    } catch (err) {
-        console.error('Error:', err);
-        alert('Error creating course');
-    }
-}
