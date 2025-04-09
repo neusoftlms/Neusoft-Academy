@@ -1,36 +1,38 @@
-// Add this to main.js (or create a new navigation.js file)
-function updateNavigation() {
-    const currentUser = getCurrentUser();
-    const navElements = document.querySelectorAll('nav ul');
-    
-    navElements.forEach(nav => {
-        if (currentUser) {
-            // User is logged in
-            nav.innerHTML = `
-                <li><a href="index.html">Home</a></li>
-                <li><a href="courses.html">Courses</a></li>
-                ${currentUser.role === 'admin' ? '<li><a href="admin.html">Admin Panel</a></li>' : ''}
-                ${currentUser.role === 'instructor' ? '<li><a href="instructor.html">Instructor Panel</a></li>' : ''}
-                ${currentUser.role === 'student' ? '<li><a href="dashboard.html">Dashboard</a></li>' : ''}
-                <li><a href="#" id="logoutBtn" class="btn">Logout</a></li>
-            `;
-        } else {
-            // User is not logged in
-            nav.innerHTML = `
-                <li><a href="index.html">Home</a></li>
-                <li><a href="courses.html">Courses</a></li>
-                <li><a href="login.html">Login</a></li>
-                <li><a href="register.html" class="btn">Sign Up</a></li>
-            `;
-        }
+document.addEventListener('DOMContentLoaded', function() {
+    // Highlight active navigation link
+    function highlightActiveNav() {
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        const navLinks = document.querySelectorAll('.main-nav a, .sidebar-nav a');
         
-        // Add logout event listener if button exists
-        const logoutBtn = document.getElementById('logoutBtn');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', handleLogout);
-        }
-    });
-}
+        navLinks.forEach(link => {
+            const linkPage = link.getAttribute('href').split('/').pop();
+            if (linkPage === currentPage) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
+    }
 
-// Call this function on page load
-document.addEventListener('DOMContentLoaded', updateNavigation);
+    // Logout functionality
+    function setupLogout() {
+        const logoutButtons = document.querySelectorAll('.logout-btn');
+        
+        logoutButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                // In a real app, this would clear the session
+                alert('You have been logged out successfully.');
+                window.location.href = 'index.html';
+            });
+        });
+    }
+
+    // Initialize navigation
+    function initNavigation() {
+        highlightActiveNav();
+        setupLogout();
+    }
+
+    initNavigation();
+});
