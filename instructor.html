@@ -3,199 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instructor Panel - Neusoft Academy</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/instructor.css">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <title>Instructor Dashboard - Neusoft Academy</title>
+    <link rel="stylesheet" href="../css/instructor.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="logo">
-                <h1>Neusoft Academy</h1>
+    <div class="instructor-container">
+        <!-- Instructor Sidebar -->
+        <aside class="instructor-sidebar">
+            <div class="sidebar-header">
+                <img src="../assets/images/logo-white.png" alt="Neusoft Academy Logo">
+                <h3>Instructor Panel</h3>
             </div>
-            <nav>
+            <nav class="sidebar-nav">
                 <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="courses.html">Courses</a></li>
-                    <li><a href="instructor.html" class="active">Instructor Panel</a></li>
-                    <li><a href="#" id="logoutBtn" class="btn">Logout</a></li>
+                    <li>
+                        <a href="instructor.html" class="active">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-book"></i>
+                            <span>My Courses</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-tasks"></i>
+                            <span>Assignments</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-users"></i>
+                            <span>Students</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Analytics</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-envelope"></i>
+                            <span>Messages</span>
+                        </a>
+                    </li>
                 </ul>
             </nav>
-        </div>
-    </header>
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <img src="../assets/images/instructor-avatar.jpg" alt="Instructor Avatar">
+                    <div class="user-info">
+                        <h5>Prof. John Smith</h5>
+                        <p>Senior Instructor</p>
+                    </div>
+                </div>
+                <a href="../index.html" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
 
-    <section class="instructor-panel">
-        <div class="container">
-            <div class="instructor-header">
-                <h1>Instructor Dashboard</h1>
-                <p>Manage your courses and content.</p>
-            </div>
-            
-            <div class="instructor-tabs">
-                <button class="tab-btn active" data-tab="my-courses">My Courses</button>
-                <button class="tab-btn" data-tab="create-course">Create Course</button>
-                <button class="tab-btn" data-tab="students">Students</button>
-                <button class="tab-btn" data-tab="analytics">Analytics</button>
-            </div>
-            
-            <div class="tab-content active" id="my-courses-tab">
-                <div class="instructor-actions">
-                    <button class="btn btn-primary" id="addContentBtn">Add Content</button>
-                </div>
-                
-                <div class="courses-list" id="instructorCourses">
-                    <!-- Courses will be loaded via JavaScript -->
-                </div>
-            </div>
-            
-            <div class="tab-content" id="create-course-tab">
-                <div class="course-form">
-                    <h2>Create New Course</h2>
-                    <form id="createCourseForm">
-                        <div class="form-group">
-                            <label for="instructorCourseTitle">Title</label>
-                            <input type="text" id="instructorCourseTitle" name="instructorCourseTitle" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="instructorCourseDescription">Description</label>
-                            <textarea id="instructorCourseDescription" name="instructorCourseDescription" rows="4" required></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="instructorCourseCategory">Category</label>
-                            <select id="instructorCourseCategory" name="instructorCourseCategory" required>
-                                <option value="technology">Technology</option>
-                                <option value="business">Business</option>
-                                <option value="design">Design</option>
-                                <option value="language">Language</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="instructorCourseImage">Image URL</label>
-                            <input type="text" id="instructorCourseImage" name="instructorCourseImage" placeholder="https://example.com/image.jpg">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Create Course</button>
-                    </form>
-                </div>
-            </div>
-            
-            <div class="tab-content" id="students-tab">
-                <div class="admin-table-container">
-                    <table class="admin-table" id="studentsTable">
-                        <thead>
-                            <tr>
-                                <th>Student</th>
-                                <th>Course</th>
-                                <th>Progress</th>
-                                <th>Last Activity</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Students will be loaded via JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            
-            <div class="tab-content" id="analytics-tab">
-                <div class="analytics-grid">
-                    <div class="analytics-card">
-                        <h3>Total Students</h3>
-                        <div class="analytics-value" id="totalStudents">0</div>
-                    </div>
-                    <div class="analytics-card">
-                        <h3>Total Courses</h3>
-                        <div class="analytics-value" id="totalCourses">0</div>
-                    </div>
-                    <div class="analytics-card">
-                        <h3>Average Rating</h3>
-                        <div class="analytics-value" id="averageRating">0.0</div>
-                    </div>
-                    <div class="analytics-card">
-                        <h3>Completion Rate</h3>
-                        <div class="analytics-value" id="completionRate">0%</div>
+        <!-- Main Content -->
+        <main class="instructor-main-content">
+            <header class="instructor-header">
+                <div class="header-left">
+                    <h2>Instructor Dashboard</h2>
+                    <div class="breadcrumb">
+                        <a href="../index.html">Home</a> / <span>Instructor Dashboard</span>
                     </div>
                 </div>
-                
-                <div class="chart-container">
-                    <canvas id="enrollmentChart" width="400" height="200"></canvas>
+                <div class="header-right">
+                    <div class="search-box">
+                        <input type="text" placeholder="Search...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </section>
+            </header>
 
-    <!-- Modals -->
-    <div class="modal" id="addContentModal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h2>Add Content to Course</h2>
-            <form id="addContentForm">
-                <div class="form-group">
-                    <label for="contentCourse">Course</label>
-                    <select id="contentCourse" name="contentCourse" required>
-                        <!-- Courses will be loaded via JavaScript -->
-                    </select>
+            <div class="instructor-content">
+                <!-- Stats Cards -->
+                <div class="instructor-stats-cards">
+                    <div class="stats-card">
+                        <div class="stats-icon bg-primary">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h3>5</h3>
+                            <p>My Courses</p>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-icon bg-success">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h3>245</h3>
+                            <p>Students</p>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-icon bg-info">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h3>4.8</h3>
+                            <p>Average Rating</p>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-icon bg-warning">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h3>12</h3>
+                            <p>Pending Questions</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="contentType">Content Type</label>
-                    <select id="contentType" name="contentType" required>
-                        <option value="video">Video</option>
-                        <option value="document">Document</option>
-                        <option value="quiz">Quiz</option>
-                        <option value="assignment">Assignment</option>
-                    </select>
+
+                <!-- My Courses -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>My Courses</h3>
+                        <a href="#" class="btn btn-sm btn-primary">Create New Course</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="course-grid" id="instructorCourses">
+                            <!-- Courses will be loaded here -->
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="contentTitle">Title</label>
-                    <input type="text" id="contentTitle" name="contentTitle" required>
+
+                <!-- Recent Students -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Recent Students</h3>
+                                <a href="#" class="btn btn-sm btn-primary">View All</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="instructor-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Course</th>
+                                                <th>Progress</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="recentStudents">
+                                            <!-- Data will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Assignment Submissions</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="assignment-submissions" id="assignmentSubmissions">
+                                    <!-- Submissions will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="contentDescription">Description</label>
-                    <textarea id="contentDescription" name="contentDescription" rows="3"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="contentFile">File URL</label>
-                    <input type="text" id="contentFile" name="contentFile" placeholder="https://example.com/file.pdf" required>
-                </div>
-                <div class="form-group">
-                    <label for="contentDuration">Duration (minutes)</label>
-                    <input type="number" id="contentDuration" name="contentDuration" min="1" value="10">
-                </div>
-                <button type="submit" class="btn btn-primary">Add Content</button>
-            </form>
-        </div>
+            </div>
+        </main>
     </div>
 
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>Neusoft Academy</h3>
-                    <p>Empowering learners to achieve their career goals through high-quality online education.</p>
-                </div>
-                <div class="footer-section">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="courses.html">Courses</a></li>
-                        <li><a href="instructor.html">Instructor Panel</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>Contact Us</h3>
-                    <p>Email: info@neusoftacademy.com</p>
-                    <p>Phone: (123) 456-7890</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2023 Neusoft Academy. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="js/instructor.js"></script>
-    <script src="js/database.js"></script>
+    <script src="../js/instructor.js"></script>
+    <script src="../js/navigation.js"></script>
 </body>
 </html>
